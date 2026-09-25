@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildCalc</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ea580c'><path d='M12 2a9 9 0 0 0-9 9v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2a9 9 0 0 0-9-9zm-1 3.1a7.03 7.03 0 0 1 2 0V11h-2V5.1zM5 11c0-3.5 2.5-6.4 5.9-6.9V11H5zm14 0h-5.9V4.1c3.4.5 5.9 3.4 5.9 6.9z'/><rect x='2' y='16' width='20' height='3' rx='1.5'/></svg>">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <header id="header-app" class="oculto">
+    <div class="logo">
+      <i class="fa-solid fa-helmet-safety icono-logo"></i>
+      <span class="marca"><span class="naranja">Build</span>Calc</span>
+    </div>
+    <div class="perfil">
+      <div class="avatar"><i class="fa-solid fa-user-gear"></i></div>
+      <div class="datos">
+        <span id="txt-usuario" class="nombre">davidd</span>
+        <span id="txt-rol" class="rol">Maestro de Obra / Ingeniero</span>
+      </div>
+      <button class="btn-salir" onclick="cerrarSesion()">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sesión
+      </button>
+    </div>
+  </header>
+
+  <section id="vista-login" class="fondo-oscuro">
+    <div class="tarjeta">
+      <h2 class="marca-login"><span class="naranja">Build</span><span class="azul">Calc</span></h2>
+      <p class="subtitulo">Calculadora de Materiales de Construcción</p>
+
+      <div class="campo">
+        <label>Usuario</label>
+        <div class="input-caja">
+          <i class="fa-regular fa-user"></i>
+          <input type="text" id="log-user" placeholder="Ingresa tu usuario">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Contraseña</label>
+        <div class="input-caja">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="log-pass" placeholder="••••••••••••">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Rol de Usuario</label>
+        <div class="input-caja">
+          <i class="fa-solid fa-hard-hat"></i>
+          <select id="log-rol">
+            <option value="Maestro de Obra / Ingeniero">Maestro de Obra / Ingeniero</option>
+            <option value="Contratista">Contratista</option>
+            <option value="Auxiliar Técnico">Auxiliar Técnico</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-naranja" onclick="iniciarSesion()">Iniciar Sesión</button>
+
+      <div class="links-auth">
+        <a href="#" onclick="recuperarClave(event)">¿Olvidaste tu contraseña? Contacta al administrador</a>
+        <p>¿No tienes cuenta? <a href="#" class="naranja" onclick="irARegistro()">Regístrate</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="vista-registro" class="fondo-oscuro oculto">
+    <div class="tarjeta">
+      <h2 class="marca-login"><span class="naranja">Build</span><span class="azul">Calc</span></h2>
+      <p class="subtitulo">Registro de Nuevo Usuario</p>
+
+      <div class="campo">
+        <label>Crear Usuario</label>
+        <div class="input-caja">
+          <i class="fa-regular fa-user"></i>
+          <input type="text" id="reg-user" placeholder="Nombre de usuario">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Crear Contraseña</label>
+        <div class="input-caja">
+          <i class="fa-solid fa-lock"></i>
+          <input type="password" id="reg-pass" placeholder="••••••••••••">
+        </div>
+      </div>
+
+      <div class="campo">
+        <label>Rol Asignado</label>
+        <div class="input-caja">
+          <i class="fa-solid fa-hard-hat"></i>
+          <select id="reg-rol">
+            <option value="Maestro de Obra / Ingeniero">Maestro de Obra / Ingeniero</option>
+            <option value="Contratista">Contratista</option>
+            <option value="Auxiliar Técnico">Auxiliar Técnico</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn-naranja" onclick="guardarRegistro()">Crear Cuenta</button>
+
+      <div class="links-auth">
+        <p>¿Ya tienes cuenta? <a href="#" class="naranja" onclick="irALogin()">Iniciar Sesión</a></p>
+      </div>
+    </div>
+  </section>
+
+  <main id="contenedor-modulos" class="area-trabajo oculto">
+
+    <div id="modulo-dashboard">
+      <div class="cabecera">
+        <div>
+          <h1>Menú Principal</h1>
+          <p class="texto-guia">Seleccione el elemento estructural o módulo que desea calcular:</p>
+        </div>
+        <div class="estado">
+          <span class="punto-verde"></span> Sistema Activo
+        </div>
+      </div>
+
+      <div class="grilla-tarjetas">
+        <div class="tarjeta-modulo activa" onclick="mostrarCalculo('muro')">
+          <div class="fila-icono">
+            <div class="icono-naranja"><i class="fa-solid fa-cubes"></i></div>
+            <i class="fa-solid fa-arrow-right flecha"></i>
+          </div>
+          <h3>Muro de Ladrillo</h3>
+          <p>Cálculo de superficie, cemento, arena y ladrillos para muros de 20 cm o 30 cm de espesor.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="mostrarCalculo('viga')">
+          <div class="icono-claro"><i class="fa-solid fa-bars-staggered"></i></div>
+          <h3>Viga de Hormigón</h3>
+          <p>Cálculo de cemento, arena, piedra y metros de varillas de hierro por metro lineal.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="mostrarCalculo('columna')">
+          <div class="icono-claro"><i class="fa-solid fa-grip-lines-vertical"></i></div>
+          <h3>Columnas de Hormigón</h3>
+          <p>Dosificación de hormigón y varillas de hierro por metro lineal.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="mostrarCalculo('contrapiso')">
+          <div class="icono-claro"><i class="fa-solid fa-layer-group"></i></div>
+          <h3>Contrapisos</h3>
+          <p>Cálculo por volumen cúbico para dosificación de cemento, arena y piedra.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="mostrarCalculo('techo')">
+          <div class="icono-claro"><i class="fa-solid fa-house-chimney-window"></i></div>
+          <h3>Techo</h3>
+          <p>Dosificación de hormigón para losa de techo y varillas de hierro.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="mostrarCalculo('pisos')">
+          <div class="icono-claro"><i class="fa-solid fa-table-cells-large"></i></div>
+          <h3>Pisos</h3>
+          <p>Cálculo de superficie con 10% adicional por recortes.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="mostrarCalculo('pintura')">
+          <div class="icono-claro"><i class="fa-solid fa-paint-roller"></i></div>
+          <h3>Pintura</h3>
+          <p>Litros requeridos según superficie y rendimiento de 6 m²/L.</p>
+        </div>
+
+        <div class="tarjeta-modulo" onclick="cerrarSesion()">
+          <div class="icono-claro"><i class="fa-solid fa-right-from-bracket"></i></div>
+          <h3>Salir</h3>
+          <p>Cerrar sesión y volver a la pantalla de inicio.</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-muro" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Muro de Ladrillo</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Muro de Ladrillo</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Parámetros del Muro</h3>
+          <p class="texto-guia">Ingrese las dimensiones deseadas para calcular los materiales requeridos.</p>
+
+          <div class="campo">
+            <label>Espesor del muro</label>
+            <div class="radios-espesor">
+              <label class="radio marcado">
+                <input type="radio" name="esp-muro" value="20" checked>
+                <span>20 cm (Muro Medio)</span>
+              </label>
+              <label class="radio">
+                <input type="radio" name="esp-muro" value="30">
+                <span>30 cm (Muro Entero)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label>Largo del muro (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="muro-largo" value="12.50" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label>Alto del muro (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="muro-alto" value="2.80" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+
+          <button class="btn-naranja">
+            <i class="fa-solid fa-calculator"></i> Calcular Materiales
+          </button>
+        </div>
+
+        <div class="panel borde-naranja">
+          <div class="cabecera-resultados">
+            <div>
+              <h3>Resultados Estimados</h3>
+              <p id="muro-sub-res" class="texto-guia">Superficie total calculada para muro de 20 cm de espesor.</p>
+            </div>
+            <span id="muro-badge" class="badge">35.00 m²</span>
+          </div>
+
+          <div class="lista-resultados">
+            <div class="item-resultado">
+              <div class="icono-claro"><i class="fa-solid fa-cart-shopping"></i></div>
+              <div>
+                <small>Cemento Requerido</small>
+                <h4 id="muro-res-cemento">381.5 <span class="unidad">kg (approx. 8 bolsas)</span></h4>
+              </div>
+            </div>
+
+            <div class="item-resultado">
+              <div class="icono-claro"><i class="fa-solid fa-mountain"></i></div>
+              <div>
+                <small>Arena Fina / Mediana</small>
+                <h4 id="muro-res-arena">3.15 <span class="unidad">m³ (metros cúbicos)</span></h4>
+              </div>
+            </div>
+
+            <div class="item-resultado">
+              <div class="icono-claro"><i class="fa-solid fa-border-all"></i></div>
+              <div>
+                <small>Ladrillos Totales</small>
+                <h4 id="muro-res-ladrillos">3,150 <span class="unidad">unidades Ladrillo Común</span></h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="aviso-naranja">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Se incluye un 10% adicional sugerido por desperdicio de obra y roturas durante el transporte.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-viga" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Viga de Hormigón</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Viga de Hormigón</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Datos de Entrada</h3>
+          <div class="campo">
+            <label>Largo de la viga (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="viga-largo" value="6.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <button class="btn-naranja">Calcular Materiales</button>
+        </div>
+
+        <div>
+          <div class="fila-badge">
+            <span id="viga-badge" class="badge"><i class="fa-solid fa-ruler"></i> 6.00 m lineales</span>
+          </div>
+          <div class="grilla-resultados">
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cube"></i></div><div><small>Cemento</small><h4 id="viga-res-cemento">54.00 kg</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-mountain"></i></div><div><small>Arena</small><h4 id="viga-res-arena">0.12 m³</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cubes"></i></div><div><small>Piedra</small><h4 id="viga-res-piedra">0.12 m²</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-bars"></i></div><div><small>Hierro del 8</small><h4 id="viga-res-h8">24.00 m</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-bars"></i></div><div><small>Hierro del 4</small><h4 id="viga-res-h4">18.00 m</h4></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-columna" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Columnas de Hormigón</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Columnas de Hormigón</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Datos de Entrada</h3>
+          <div class="campo">
+            <label>Largo / Altura (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="columna-largo" value="3.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <button class="btn-naranja">Calcular Materiales</button>
+        </div>
+
+        <div>
+          <div class="fila-badge">
+            <span id="columna-badge" class="badge"><i class="fa-solid fa-ruler"></i> 3.00 m lineales</span>
+          </div>
+          <div class="grilla-resultados">
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cube"></i></div><div><small>Cemento</small><h4 id="columna-res-cemento">22.50 kg</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-mountain"></i></div><div><small>Arena</small><h4 id="columna-res-arena">0.048 m³</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cubes"></i></div><div><small>Piedra</small><h4 id="columna-res-piedra">0.048 m²</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-bars"></i></div><div><small>Hierro del 10</small><h4 id="columna-res-h10">18.00 m</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-bars"></i></div><div><small>Hierro del 4</small><h4 id="columna-res-h4">9.00 m</h4></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-contrapiso" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Contrapisos</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Contrapisos</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Datos de Entrada</h3>
+          <div class="campo">
+            <label>Espesor (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="contrapiso-esp" value="0.10" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Ancho (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="contrapiso-ancho" value="4.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Largo (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="contrapiso-largo" value="5.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <button class="btn-naranja">Calcular Materiales</button>
+        </div>
+
+        <div>
+          <div class="fila-badge">
+            <span id="contrapiso-badge" class="badge"><i class="fa-solid fa-cube"></i> Volumen: 2.00 m³</span>
+          </div>
+          <div class="grilla-resultados">
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cube"></i></div><div><small>Cemento</small><h4 id="contrapiso-res-cemento">210.00 kg</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-mountain"></i></div><div><small>Arena</small><h4 id="contrapiso-res-arena">0.90 m³</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cubes"></i></div><div><small>Piedra</small><h4 id="contrapiso-res-piedra">1.80 m³</h4></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-techo" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Techo</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Techo</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Datos de Entrada</h3>
+          <div class="campo">
+            <label>Espesor (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="techo-esp" value="0.12" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Ancho (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="techo-ancho" value="4.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Largo (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="techo-largo" value="5.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+          <button class="btn-naranja">Calcular Materiales</button>
+        </div>
+
+        <div>
+          <div class="fila-badge">
+            <span id="techo-badge" class="badge"><i class="fa-solid fa-border-all"></i> Superficie: 20.00 m²</span>
+          </div>
+          <div class="grilla-resultados">
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cube"></i></div><div><small>Cemento</small><h4 id="techo-res-cemento">660.00 kg</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-mountain"></i></div><div><small>Arena</small><h4 id="techo-res-arena">1.44 m³</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-cubes"></i></div><div><small>Piedra</small><h4 id="techo-res-piedra">1.44 m³</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-bars"></i></div><div><small>Hierro del 8</small><h4 id="techo-res-h8">140.00 m</h4></div></div>
+            <div class="item-resultado"><div class="icono-claro"><i class="fa-solid fa-bars"></i></div><div><small>Hierro del 6</small><h4 id="techo-res-h6">80.00 m</h4></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-pisos" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Pisos</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Pisos</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Datos de Entrada</h3>
+          <h2 class="subtitulo-negrita">Cálculo de Revestimiento de Pisos</h2>
+          <p class="texto-guia">Calcule la superficie y la cantidad exacta de piso cerámico o porcelanato necesario para su obra.</p>
+
+          <div class="campo">
+            <label>Ancho del paño (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="pisos-ancho" value="4.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label>Largo del paño (m)</label>
+            <div class="input-unidad">
+              <input type="number" id="pisos-largo" value="5.00" step="0.01">
+              <span>metros</span>
+            </div>
+          </div>
+
+          <button class="btn-naranja">Calcular Materiales</button>
+        </div>
+
+        <div>
+          <div class="fila-badge">
+            <span id="pisos-badge" class="badge"><i class="fa-solid fa-tag"></i> Superficie Neta: 20.00 m²</span>
+          </div>
+
+          <div class="grilla-resultados">
+            <div class="item-resultado">
+              <div class="icono-claro"><i class="fa-solid fa-table-cells-large"></i></div>
+              <div>
+                <small>Piso Requerido</small>
+                <h4 id="pisos-res-total">22.00 m²</h4>
+                <span class="mini">(Incluye 10% adicional por recortes)</span>
+              </div>
+            </div>
+
+            <div class="item-resultado">
+              <div class="icono-claro"><i class="fa-solid fa-trash-can"></i></div>
+              <div>
+                <small>Desperdicio Estimado (10%)</small>
+                <h4 id="pisos-res-extra">2.00 m²</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="aviso-azul">
+            <i class="fa-solid fa-circle-info"></i>
+            <span>Nota técnica: El porcentaje de desperdicio recomendado varía según la colocación (10% regular, 15% diagonal).</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modulo-pintura" class="oculto">
+      <div class="migas">
+        <a href="#" onclick="volverAlMenu()">&lt; Menú Principal</a> / <span>Cálculo de Pintura</span>
+      </div>
+      <h1 class="titulo-pagina">Cálculo de Pintura</h1>
+
+      <div class="dos-columnas">
+        <div class="panel">
+          <h3>Datos de Entrada</h3>
+          <h2 class="subtitulo-negrita">Cálculo de Pintura para Muros</h2>
+          <p class="texto-guia">Estime los litros de pintura necesarios según el rendimiento estándar de cobertura.</p>
+
+          <div class="campo">
+            <label>Superficie del muro (m²)</label>
+            <div class="input-unidad">
+              <input type="number" id="pintura-sup" value="30.00" step="0.01">
+              <span>m²</span>
+            </div>
+          </div>
+
+          <button class="btn-naranja">Calcular Materiales</button>
+        </div>
+
+        <div>
+          <div class="fila-badge">
+            <span class="badge"><i class="fa-solid fa-circle-info"></i> Rendimiento estándar: 6 m² / Litro</span>
+          </div>
+
+          <div class="tarjeta-destacada">
+            <div class="icono-grande"><i class="fa-solid fa-paint-roller"></i></div>
+            <div>
+              <span class="etiqueta">RESULTADO ESTIMADO</span>
+              <h2 id="pintura-res-litros">Pintura Necesaria: 5.00 Litros</h2>
+              <p class="texto-guia">Cálculo basado en una aplicación de 2 manos sobre superficies con absorción regular.</p>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h4>Consejo de aplicación</h4>
+            <p class="texto-guia">Para paredes nuevas o rústicas, se recomienda aplicar un sellador fijador previo para evitar que la pared absorba demasiada pintura y reduzca el rendimiento.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
