@@ -4,7 +4,7 @@ Calculadora de materiales de construcción con sistema de login, registro de usu
 
 ## Descripción
 
-BuildCalc es una aplicación web frontend desarrollada como proyecto práctico para la asignatura Interfaces I. Permite a un usuario registrarse, iniciar sesión y acceder a un panel con módulos de cálculo de materiales para diferentes elementos de obra.
+BuildCalc es una aplicación web frontend desarrollada como proyecto práctico para la asignatura de Diseño de Interfaces. Permite a un usuario registrarse, iniciar sesión y acceder a un panel con módulos de cálculo de materiales para diferentes elementos de obra.
 
 ## Módulos disponibles
 
@@ -24,11 +24,13 @@ BuildCalc es una aplicación web frontend desarrollada como proyecto práctico p
 
 ## Estructura del proyecto
 
+```
 buildcalc/
 ├── index.html
 ├── style.css
 ├── script.js
 └── README.md
+```
 
 ## Cómo usar
 
