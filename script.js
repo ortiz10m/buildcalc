@@ -54,6 +54,10 @@ function iniciarSesion() {
     } else {
       document.getElementById("txt-usuario").innerText = u;
       document.getElementById("txt-rol").innerText = datos.rol;
+      
+      sessionStorage.setItem("usuario", u);
+      sessionStorage.setItem("rol", datos.rol);
+      
       volverAlMenu();
     }
   })
@@ -113,6 +117,9 @@ function recuperarClave(e) {
 }
 
 function cerrarSesion() {
+  sessionStorage.removeItem("usuario");
+  sessionStorage.removeItem("rol");
+  
   document.getElementById("log-user").value = "";
   document.getElementById("log-pass").value = "";
   irALogin();
@@ -264,3 +271,14 @@ function cambiarEspesor() {
   }
   calcularMuro();
 }
+
+window.addEventListener("load", function() {
+  let userGuardado = sessionStorage.getItem("usuario");
+  let rolGuardado = sessionStorage.getItem("rol");
+  
+  if (userGuardado) {
+    document.getElementById("txt-usuario").innerText = userGuardado;
+    document.getElementById("txt-rol").innerText = rolGuardado;
+    volverAlMenu();
+  }
+});
