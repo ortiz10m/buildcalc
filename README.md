@@ -1,10 +1,10 @@
 # BuildCalc
 
-Calculadora de materiales de construcción con sistema de login, registro de usuarios y módulos de cálculo para elementos estructurales.
+Calculadora de materiales de construcción con sistema de login, registro de usuarios, backend en Python y persistencia de datos en JSON.
 
 ## Descripción
 
-BuildCalc es una aplicación web frontend desarrollada como proyecto práctico para la asignatura de Diseño de Interfaces. Permite a un usuario registrarse, iniciar sesión y acceder a un panel con módulos de cálculo de materiales para diferentes elementos de obra.
+BuildCalc es una aplicación web Fullstack desarrollada como proyecto práctico para la asignatura de Diseño de Interfaces. Permite a un usuario registrarse, iniciar sesión y acceder a un panel con módulos de cálculo de materiales. La lógica matemática y el almacenamiento de datos se manejan en el backend, usando el patrón de arquitectura Cliente-Servidor.
 
 ## Módulos disponibles
 
@@ -18,27 +18,34 @@ BuildCalc es una aplicación web frontend desarrollada como proyecto práctico p
 
 ## Tecnologías usadas
 
-- HTML5
-- CSS3
-- JavaScript (vanilla)
+- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
+- **Backend:** Python (Flask)
+- **Base de datos:** JSON
 
 ## Estructura del proyecto
 
-```
+```text
 buildcalc/
 ├── index.html
 ├── style.css
 ├── script.js
+├── app.py
 └── README.md
 ```
 
-## Cómo usar
+## Cómo ejecutar el proyecto
 
 1. Descarga o clona el repositorio.
-2. Abre el archivo index.html en tu navegador.
-3. Regístrate con un usuario y contraseña.
-4. Inicia sesión.
-5. Selecciona el módulo que quieras visualizar.
+2. Instala las dependencias de Python:
+   ```
+   pip install flask flask-cors
+   ```
+3. Ejecuta el servidor backend:
+   ```
+   python app.py
+   ```
+4. Abre el archivo index.html en tu navegador.
+5. Regístrate, inicia sesión y comienza a calcular.
 
 ## Autores
 
